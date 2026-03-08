@@ -7,8 +7,8 @@ function getRandomFlower() {
   return flowers[Math.floor(Math.random() * flowers.length)];
 }
 
-async function generateCompliment(): Promise<string> {
-  const apiKey = import.meta.env.VITE_MISTRAL_API_KEY;
+async function generateCompliment(history: string[]): Promise<string> {
+  const apiKey = 'NmiwCDyHHWt7OQn3kQzlEj5mJB7rGOGT';
 
   const res = await fetch('/mistral-api/v1/chat/completions', {
     method: 'POST',
@@ -23,17 +23,25 @@ async function generateCompliment(): Promise<string> {
         {
           role: 'system',
           content:
-            'Ты пишешь красивые и уникальные комплименты женщинам на 8 марта. Каждый комплимент должен быть разным, тёплым и искренним. Отвечай только текстом комплимента, без кавычек и пояснений. комплимент должен быть не слишком длинным',
+            'Ты пишешь красивые, короткие и искренние комплименты женщинам на 8 марта. Каждый комплимент должен быть уникальным и отличаться от предыдущих.',
         },
         {
           role: 'user',
-          content: 'Напиши один короткий комплимент женщине на 8 марта.',
+          content: `
+Вот комплименты которые уже были:
+${history.join('\n')}
+
+Напиши новый короткий комплимент женщине на 8 марта.
+Не повторяй предыдущие.
+Отвечай только текстом комплимента.
+`,
         },
       ],
     }),
   });
 
   const data = await res.json();
+
   return data.choices?.[0]?.message?.content?.trim() ?? 'поругайте Айнура генерация сломалась';
 }
 
@@ -43,18 +51,33 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const [history, setHistory] = useState<string[]>([]);
+
   const generate = async () => {
     if (loading) return;
+
     setLoading(true);
     setCompliment(null);
     setError(null);
 
     try {
-      const text = await generateCompliment();
+      const text = await generateCompliment(history);
+
       setFlower(getRandomFlower());
       setCompliment(text);
+
+      setHistory((prev) => {
+        const updated = [...prev, text];
+
+        // оставляем максимум 10
+        if (updated.length > 10) {
+          return updated.slice(updated.length - 10);
+        }
+
+        return updated;
+      });
     } catch {
-      setError('Не удалось получить комплимент. Проверь API ключ в .env');
+      setError('Не удалось получить комплимент. Проверь API ключ.');
     } finally {
       setLoading(false);
     }
@@ -84,6 +107,7 @@ export default function App() {
           {loading ? 'Генерирую...' : 'Получить комплимент'}
         </button>
       </div>
+
       <p className="made-by">С любовью от Айнура</p>
     </div>
   );
