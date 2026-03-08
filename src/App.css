@@ -1,0 +1,180 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #ffe4f0 0%, #ffd6e8 40%, #fce4ec 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Floating petals */
+.petals-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.petal {
+  position: absolute;
+  font-size: 1.4rem;
+  top: -2rem;
+  left: calc(var(--i) * 10% + 5%);
+  animation: fall linear infinite;
+  animation-duration: calc(6s + var(--i) * 0.8s);
+  animation-delay: calc(var(--i) * 0.7s);
+  opacity: 0.7;
+}
+
+@keyframes fall {
+  0% {
+    transform: translateY(-2rem) rotate(0deg);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(110vh) rotate(360deg);
+    opacity: 0.2;
+  }
+}
+
+/* Card */
+.card {
+  position: relative;
+  z-index: 1;
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 182, 209, 0.5);
+  border-radius: 28px;
+  padding: 3rem 2.5rem;
+  max-width: 420px;
+  width: 90%;
+  text-align: center;
+  box-shadow:
+    0 16px 48px rgba(255, 100, 150, 0.18),
+    0 2px 8px rgba(255, 100, 150, 0.1);
+}
+
+.header-flower {
+  font-size: 4rem;
+  margin-bottom: 0.5rem;
+  animation: sway 3s ease-in-out infinite;
+  display: inline-block;
+}
+
+@keyframes sway {
+  0%,
+  100% {
+    transform: rotate(-8deg) scale(1);
+  }
+  50% {
+    transform: rotate(8deg) scale(1.08);
+  }
+}
+
+.title {
+  font-size: 2.4rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #e91e8c, #ff6ab0);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 0.4rem;
+  letter-spacing: -0.5px;
+}
+
+.subtitle {
+  font-size: 1rem;
+  color: #c06090;
+  margin-bottom: 2rem;
+  font-style: italic;
+}
+
+/* Compliment box */
+.compliment-box {
+  min-height: 80px;
+  background: linear-gradient(135deg, #fff0f7, #ffe4f2);
+  border: 1.5px solid #ffb6d9;
+  border-radius: 16px;
+  padding: 1.2rem 1.4rem;
+  margin-bottom: 1.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity 0.4s ease,
+    transform 0.4s ease;
+}
+
+.compliment-box.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.compliment-text {
+  font-size: 1.05rem;
+  color: #a0305a;
+  line-height: 1.6;
+  font-weight: 500;
+}
+
+/* Button */
+.btn {
+  background: linear-gradient(135deg, #f06292, #e91e8c);
+  color: #fff;
+  border: none;
+  border-radius: 50px;
+  padding: 0.85rem 2.2rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 6px 20px rgba(233, 30, 140, 0.35);
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    opacity 0.15s;
+  letter-spacing: 0.3px;
+}
+
+.btn:hover:not(:disabled) {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 10px 28px rgba(233, 30, 140, 0.45);
+}
+
+.btn:active:not(:disabled) {
+  transform: translateY(0) scale(0.98);
+  box-shadow: 0 4px 12px rgba(233, 30, 140, 0.3);
+}
+
+.btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.made-by {
+  position: fixed;
+  bottom: 1rem;
+  right: 1.2rem;
+  font-size: 1.4rem;
+  color: rgba(160, 48, 90, 0.5);
+  z-index: 2;
+  font-style: italic;
+}
